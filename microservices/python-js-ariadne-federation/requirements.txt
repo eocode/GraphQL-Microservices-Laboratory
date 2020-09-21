@@ -1,0 +1,2 @@
+ariadne>=0.12
+uvicorn

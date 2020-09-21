@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model permissions_to_roles {
+  permissionId Int
+  role_id      Int
+  permissions  permissions @relation("permissions_to_rolesTopermissions", fields: [permissionId], references: [id])
+  roles        roles       @relation(fields: [role_id], references: [id])
+
+  @@index([role_id], name: "_permissions_to_roles_role_index")
+  @@map("_permissions_to_roles")
+  @@unique([permissionId, role_id], name: "_permissions_to_roles_permission_role_unique")
+}
+
+model roles_to_users {
+  role_id Int
+  user_id String
+  roles   roles  @relation("roles_to_usersToroles", fields: [role_id], references: [id])
+  users   users  @relation(fields: [user_id], references: [id])
+
+  @@index([user_id], name: "_roles_to_users_user_index")
+  @@map("_roles_to_users")
+  @@unique([role_id, user_id], name: "_roles_to_users_role_user_unique")
+}
+
+model genders {
+  id         Int        @default(autoincrement()) @id
+  created_at DateTime   @default(now())
+  updated_at DateTime
+  name       String
+  profiles   profiles[]
+}
+
+model permissions {
+  id                   Int                    @default(autoincrement()) @id
+  created_at           DateTime               @default(now())
+  updated_at           DateTime
+  name                 String
+  permissions_to_roles permissions_to_roles[] @relation("permissions_to_rolesTopermissions")
+}
+
+model profiles {
+  id         Int      @default(autoincrement()) @id
+  created_at DateTime @default(now())
+  updated_at DateTime
+  birthday   DateTime
+  gender_id  Int
+  user_id    String?
+  genders    genders  @relation(fields: [gender_id], references: [id])
+  users      users?   @relation(fields: [user_id], references: [id])
+}
+
+model roles {
+  id                   Int                    @default(autoincrement()) @id
+  created_at           DateTime               @default(now())
+  updated_at           DateTime
+  name                 String
+  permissions_to_roles permissions_to_roles[]
+  roles_to_users       roles_to_users[]       @relation("roles_to_usersToroles")
+}
+
+model users {
+  id                String           @id
+  created_at        DateTime         @default(now())
+  updated_at        DateTime
+  first_name        String?
+  last_name         String?
+  email             String           @unique
+  password          String
+  phone             String?
+  username          String?
+  avatar            String?
+  email_verified_at DateTime?
+  roles_to_users    roles_to_users[]
+  profiles          profiles[]
+}

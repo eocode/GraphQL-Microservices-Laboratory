@@ -1,0 +1,4 @@
+*.py[cod]
+.*
+!.gitignore
+node_modules

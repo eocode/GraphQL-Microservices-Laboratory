@@ -1,0 +1,56 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @extends on INTERFACE | OBJECT
+
+directive @external on FIELD_DEFINITION | OBJECT
+
+directive @key(fields: String!) on INTERFACE | OBJECT
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+type Auth {
+  """JWT access token"""
+  accessToken: String!
+
+  """JWT refresh token"""
+  refreshToken: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  login(data: LoginInput!): Auth!
+  refreshToken(token: String!): Token!
+}
+
+type Query {
+  MakePassword(password: String!): String!
+  UsersFindByEmail(email: String!): Users!
+  UsersGet: [Users!]!
+}
+
+type Token {
+  """JWT access token"""
+  accessToken: String!
+
+  """JWT refresh token"""
+  refreshToken: String!
+}
+
+type Users {
+  avatar: String!
+  email: String!
+  first_name: String!
+  id: ID!
+  last_name: String!
+  password: String!
+  phone: String!
+  username: String!
+}
